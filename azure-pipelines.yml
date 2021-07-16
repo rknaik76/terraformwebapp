@@ -16,7 +16,7 @@ parameters:
   - destroy
 
 pool:
-  name: 'DI-EDP'
+  name: 'Azure Pipelines'
 #  demands:
 #  - agent.name -equals GX-ZWEAPPPWV134-Agent2
 variables:
