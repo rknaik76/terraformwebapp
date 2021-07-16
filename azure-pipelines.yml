@@ -36,14 +36,6 @@ stages:
         Contents: '*.tf'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
         CleanTargetFolder: true
-    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
-      displayName: 'Replace tokens in **/*.tf'
-      inputs:
-        rootDirectory: '$(Build.ArtifactStagingDirectory)'
-        targetFiles: |
-         *.tf
-        tokenPrefix: '__'
-        tokenSuffix: '__'
     - task: PublishBuildArtifacts@1
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)'
