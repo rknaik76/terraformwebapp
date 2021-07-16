@@ -71,23 +71,20 @@ stages:
 
       - task: PwC NextGen Cloud Create ngc.auto.tfvars File@3
         inputs:
-          APP_ENV_ID: '$(APP_ENV_ID)'
+          TF_VAR_subscription_id: '$(TF_VAR_subscription_id)'
           WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
-          SNOW_API_BASE_URL: '$(SNOW_API_BASE_URL)'
-          API_KEY: '$(API_KEY)'
-          API_KEY_SECRET: '$(API_KEY_SECRET)'
-          PROXY_AUTH: '$(PROXY_AUTH)'
-          API_USERNAME: '$(API_USER_NAME)'
-          API_PASSWORD: '$(API_PASSWORD)'
+          TF_VAR_client_id: '$(TF_VAR_client_id)'
+          TF_VAR_client_secret: '$(TF_VAR_client_secret)'
+          TF_VAR_tenant_id: '$(TF_VAR_tenant_id)'
+
 
       - task: PwC NextGen Cloud TFE Deploy@3
         inputs:
-          TERRAFORM_COMMAND: ${{ parameters.TerraformState }}
-          TERRAFORM_ORG: 'IFS'
-          TERRAFORM_TOKEN: '$(TFE_TOKEN)'
-          TERRAFORM_URL: '$(TFE_URL)'
-          TERRAFORM_WORKSPACE: '$(TFE_WORKSPACE3)'
+          TF_VAR_subscription_id: '$(TF_VAR_subscription_id)'
           WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+          TF_VAR_client_id: '$(TF_VAR_client_id)'
+          TF_VAR_client_secret: '$(TF_VAR_client_secret)'
+          TF_VAR_tenant_id: '$(TF_VAR_tenant_id)'
       - script: git reset --hard HEAD
 
     - job: TerraformDeploy
@@ -107,23 +104,19 @@ stages:
 
       - task: PwC NextGen Cloud Create ngc.auto.tfvars File@3
         inputs:
-          APP_ENV_ID: '$(APP_ENV_ID)'
+          TF_VAR_subscription_id: '$(TF_VAR_subscription_id)'
           WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
-          SNOW_API_BASE_URL: '$(SNOW_API_BASE_URL)'
-          API_KEY: '$(API_KEY)'
-          API_KEY_SECRET: '$(API_KEY_SECRET)'
-          PROXY_AUTH: '$(PROXY_AUTH)'
-          API_USERNAME: '$(API_USER_NAME)'
-          API_PASSWORD: '$(API_PASSWORD)'
+          TF_VAR_client_id: '$(TF_VAR_client_id)'
+          TF_VAR_client_secret: '$(TF_VAR_client_secret)'
+          TF_VAR_tenant_id: '$(TF_VAR_tenant_id)'
 
       - task: PwC NextGen Cloud TFE Deploy@3
         inputs:
-          TERRAFORM_COMMAND: ${{ parameters.TerraformState }} -auto-approve
-          TERRAFORM_ORG: 'IFS'
-          TERRAFORM_TOKEN: '$(TFE_TOKEN)'
-          TERRAFORM_URL: '$(TFE_URL)'
-          TERRAFORM_WORKSPACE: '$(TFE_WORKSPACE3)'
+          TF_VAR_subscription_id: '$(TF_VAR_subscription_id)'
           WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+          TF_VAR_client_id: '$(TF_VAR_client_id)'
+          TF_VAR_client_secret: '$(TF_VAR_client_secret)'
+          TF_VAR_tenant_id: '$(TF_VAR_tenant_id)'
       - script: git reset --hard HEAD
 
     - job: TerraformDestroy
@@ -143,21 +136,18 @@ stages:
 
       - task: PwC NextGen Cloud Create ngc.auto.tfvars File@3
         inputs:
-          APP_ENV_ID: '$(APP_ENV_ID)'
+          TF_VAR_subscription_id: '$(TF_VAR_subscription_id)'
           WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
-          SNOW_API_BASE_URL: '$(SNOW_API_BASE_URL)'
-          API_KEY: '$(API_KEY)'
-          API_KEY_SECRET: '$(API_KEY_SECRET)'
-          PROXY_AUTH: '$(PROXY_AUTH)'
-          API_USERNAME: '$(API_USER_NAME)'
-          API_PASSWORD: '$(API_PASSWORD)'
+          TF_VAR_client_id: '$(TF_VAR_client_id)'
+          TF_VAR_client_secret: '$(TF_VAR_client_secret)'
+          TF_VAR_tenant_id: '$(TF_VAR_tenant_id)'
 
       - task: PwC NextGen Cloud TFE Deploy@3
         inputs:
           TERRAFORM_COMMAND: ${{ parameters.TerraformState }} -auto-approve
-          TERRAFORM_ORG: 'IFS'
-          TERRAFORM_TOKEN: '$(TFE_TOKEN)'
-          TERRAFORM_URL: '$(TFE_URL)'
-          TERRAFORM_WORKSPACE: '$(TFE_WORKSPACE3)'
+          TF_VAR_subscription_id: '$(TF_VAR_subscription_id)'
           WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+          TF_VAR_client_id: '$(TF_VAR_client_id)'
+          TF_VAR_client_secret: '$(TF_VAR_client_secret)'
+          TF_VAR_tenant_id: '$(TF_VAR_tenant_id)'
       - script: git reset --hard HEAD
