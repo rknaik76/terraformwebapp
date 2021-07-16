@@ -20,15 +20,10 @@ pool:
 #  demands:
 #  - agent.name -equals GX-ZWEAPPPWV134-Agent2
 variables:
-- group: NGC-AED-EXTRA
-- group: NGC-AED
-- group: NGC-POSTGRESQL
-- group: NGC-REDIS-CACHE
-- group: NGC-APPG
-- group: NGC-KEYVAULT
+- group: ACCESS_DETAILS
 
 stages:
-- stage: BuildCultivate
+- stage: BuildApp
   jobs:
   - job: TerraformBuild
     steps:
