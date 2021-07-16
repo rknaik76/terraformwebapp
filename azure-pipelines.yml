@@ -1,28 +1,168 @@
-# Starter pipeline
-- task: TerraformTaskV2@2
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    backendServiceArm: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
-    backendAzureRmResourceGroupName: 'terraform'
-    backendAzureRmStorageAccountName: 'terraformstorage1001'
-    backendAzureRmContainerName: 'terraformwebapp'
-    backendAzureRmKey: '''tf/terraform.tfstate'''
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+name: '$(Build.DefinitionName)_$(SourceBranchName)_$(date:yyyyMMdd)$(rev:.r)'
 trigger:
-- main
+  branches:
+    include:
+    - master
+parameters:
+
+- name: TerraformState
+  displayName: TerraformState
+  type: string
+  default: apply
+  values:
+  - init
+  - apply
+  - plan
+  - destroy
 
 pool:
-  vmImage: ubuntu-latest
+  name: 'DI-EDP'
+#  demands:
+#  - agent.name -equals GX-ZWEAPPPWV134-Agent2
+variables:
+- group: NGC-AED-EXTRA
+- group: NGC-AED
+- group: NGC-POSTGRESQL
+- group: NGC-REDIS-CACHE
+- group: NGC-APPG
+- group: NGC-KEYVAULT
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- stage: BuildCultivate
+  jobs:
+  - job: TerraformBuild
+    steps:
+    # - task: 30f35852-3f7e-4c0c-9a88-e127b4f97211@1
+    #   condition: false
+    #   inputs:
+    #     alias: none
+    - task: CopyFiles@2
+      inputs:
+        Contents: '*.tf'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        CleanTargetFolder: true
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+      displayName: 'Replace tokens in **/*.tf'
+      inputs:
+        rootDirectory: '$(Build.ArtifactStagingDirectory)'
+        targetFiles: |
+         *.tf
+        tokenPrefix: '__'
+        tokenSuffix: '__'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: drop
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+
+- stage: ApplyCultivateNGCInfrastructure
+
+  jobs:
+
+    - job: TerraformPlan
+      condition: eq('${{parameters.TerraformState}}', 'plan')
+      steps:
+
+      - download: none
+
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          downloadPath: '$(WORKING_DIRECTORY)'
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: '0.14.7'
+
+      - task: PwC NextGen Cloud Create ngc.auto.tfvars File@3
+        inputs:
+          APP_ENV_ID: '$(APP_ENV_ID)'
+          WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+          SNOW_API_BASE_URL: '$(SNOW_API_BASE_URL)'
+          API_KEY: '$(API_KEY)'
+          API_KEY_SECRET: '$(API_KEY_SECRET)'
+          PROXY_AUTH: '$(PROXY_AUTH)'
+          API_USERNAME: '$(API_USER_NAME)'
+          API_PASSWORD: '$(API_PASSWORD)'
+
+      - task: PwC NextGen Cloud TFE Deploy@3
+        inputs:
+          TERRAFORM_COMMAND: ${{ parameters.TerraformState }}
+          TERRAFORM_ORG: 'IFS'
+          TERRAFORM_TOKEN: '$(TFE_TOKEN)'
+          TERRAFORM_URL: '$(TFE_URL)'
+          TERRAFORM_WORKSPACE: '$(TFE_WORKSPACE3)'
+          WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+      - script: git reset --hard HEAD
+
+    - job: TerraformDeploy
+      condition: eq('${{parameters.TerraformState}}', 'apply')
+      steps:
+
+      - download: none
+
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          downloadPath: '$(WORKING_DIRECTORY)'
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: '0.14.7'
+
+      - task: PwC NextGen Cloud Create ngc.auto.tfvars File@3
+        inputs:
+          APP_ENV_ID: '$(APP_ENV_ID)'
+          WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+          SNOW_API_BASE_URL: '$(SNOW_API_BASE_URL)'
+          API_KEY: '$(API_KEY)'
+          API_KEY_SECRET: '$(API_KEY_SECRET)'
+          PROXY_AUTH: '$(PROXY_AUTH)'
+          API_USERNAME: '$(API_USER_NAME)'
+          API_PASSWORD: '$(API_PASSWORD)'
+
+      - task: PwC NextGen Cloud TFE Deploy@3
+        inputs:
+          TERRAFORM_COMMAND: ${{ parameters.TerraformState }} -auto-approve
+          TERRAFORM_ORG: 'IFS'
+          TERRAFORM_TOKEN: '$(TFE_TOKEN)'
+          TERRAFORM_URL: '$(TFE_URL)'
+          TERRAFORM_WORKSPACE: '$(TFE_WORKSPACE3)'
+          WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+      - script: git reset --hard HEAD
+
+    - job: TerraformDestroy
+      condition: eq('${{parameters.TerraformState}}', 'destroy')
+      steps:
+
+      - download: none
+
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          downloadPath: '$(WORKING_DIRECTORY)'
+      - task: TerraformInstaller@0
+        inputs:
+          terraformVersion: '0.14.7'
+
+      - task: PwC NextGen Cloud Create ngc.auto.tfvars File@3
+        inputs:
+          APP_ENV_ID: '$(APP_ENV_ID)'
+          WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+          SNOW_API_BASE_URL: '$(SNOW_API_BASE_URL)'
+          API_KEY: '$(API_KEY)'
+          API_KEY_SECRET: '$(API_KEY_SECRET)'
+          PROXY_AUTH: '$(PROXY_AUTH)'
+          API_USERNAME: '$(API_USER_NAME)'
+          API_PASSWORD: '$(API_PASSWORD)'
+
+      - task: PwC NextGen Cloud TFE Deploy@3
+        inputs:
+          TERRAFORM_COMMAND: ${{ parameters.TerraformState }} -auto-approve
+          TERRAFORM_ORG: 'IFS'
+          TERRAFORM_TOKEN: '$(TFE_TOKEN)'
+          TERRAFORM_URL: '$(TFE_URL)'
+          TERRAFORM_WORKSPACE: '$(TFE_WORKSPACE3)'
+          WORKING_DIRECTORY: '$(WORKING_DIRECTORY)/drop/'
+      - script: git reset --hard HEAD
