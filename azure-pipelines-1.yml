@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: home_windows
+  name: 'home_windows'
 
 variables:
 - group: ACCESS_DETAILS
