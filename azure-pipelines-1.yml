@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: home_windows
 
+variables:
+- group: ACCESS_DETAILS
+
 steps:
 
 - task: TerraformInstaller@0
