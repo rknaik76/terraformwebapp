@@ -32,5 +32,4 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    commandOptions: '--auto-approve'
     environmentServiceNameAzureRM: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
