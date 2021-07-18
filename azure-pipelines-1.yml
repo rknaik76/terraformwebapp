@@ -18,7 +18,7 @@ steps:
   inputs:
     terraformVersion: '0.13.3'
 
-- task: TerraformTaskV2-INIT@2
+- task: TerraformTaskV2init@2
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -29,7 +29,7 @@ steps:
     backendAzureRmKey: 'tf/terraform.tfstate'
     commandOptions: -input=false -var "client_id=$(TF_VAR_client_id) client_secret=$(TF_VAR_client_secret) subscription_id=$(TF_VAR_subscription_id) tenant_id=$(TF_VAR_tenant_id)"
 
-- task: TerraformTaskV2-PLAN@2
+- task: TerraformTaskV2plan@2
   inputs:
     provider: 'azurerm'
     command: 'plan'
