@@ -27,9 +27,11 @@ steps:
     backendAzureRmStorageAccountName: 'terraformstorage1001'
     backendAzureRmContainerName: 'terraformwebapp'
     backendAzureRmKey: 'tf/terraform.tfstate'
+    commandOptions: -input=false -var "client_id=$(TF_VAR_client_id) client_secret=$(TF_VAR_client_secret) subscription_id=$(TF_VAR_subscription_id) tenant_id=$(TF_VAR_tenant_id)"
 
 - task: TerraformTaskV2@2
   inputs:
     provider: 'azurerm'
     command: 'plan'
     environmentServiceNameAzureRM: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
+    commandOptions: -input=false -var "client_id=$(TF_VAR_client_id) client_secret=$(TF_VAR_client_secret) subscription_id=$(TF_VAR_subscription_id) tenant_id=$(TF_VAR_tenant_id)"
