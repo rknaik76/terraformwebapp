@@ -16,7 +16,7 @@ parameters:
   - destroy
 
 pool:
-  name: 'Azure Pipelines'
+  name: 'home_windows'
 #  demands:
 #  - agent.name -equals GX-ZWEAPPPWV134-Agent2
 variables:
