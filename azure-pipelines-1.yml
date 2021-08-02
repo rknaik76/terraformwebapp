@@ -19,6 +19,7 @@ steps:
     terraformVersion: '0.13.3'
 
 - task: TerraformTaskV2@2
+  displayName: init
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -29,6 +30,7 @@ steps:
     backendAzureRmKey: 'tf/terraform.tfstate'
 
 - task: TerraformTaskV2@2
+  displayName: plan
   inputs:
     provider: 'azurerm'
     command: 'plan'
@@ -36,6 +38,7 @@ steps:
     environmentServiceNameAzureRM: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
 
 - task: TerraformTaskV2@2
+  displayName: apply
   inputs:
     provider: 'azurerm'
     command: 'apply'
