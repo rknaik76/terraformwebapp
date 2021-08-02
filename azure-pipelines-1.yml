@@ -12,51 +12,55 @@ pool:
 variables:
 - group: ACCESS_DETAILS
 
-Stages:
-  stage: Build
+stages:
+- stage: Build
   displayName:  Build
   jobs:
-  displayName: Build
+  - job: Build
+    displayName: Build
   
-  steps:
-  - task: TerraformInstaller@0
-    inputs:
-      terraformVersion: '0.13.3'
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.13.3'
 
-  - task: TerraformTaskV2@2
-    displayName: init
-    inputs:
-      provider: 'azurerm'
-      command: 'init'
-      backendServiceArm: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
-      backendAzureRmResourceGroupName: 'terraform'
-      backendAzureRmStorageAccountName: 'terraformstorage1001'
-      backendAzureRmContainerName: 'terraformwebapp'
-      backendAzureRmKey: 'tf/terraform.tfstate'
+    - task: TerraformTaskV2@2
+      displayName: init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
+        backendAzureRmResourceGroupName: 'terraform'
+        backendAzureRmStorageAccountName: 'terraformstorage1001'
+        backendAzureRmContainerName: 'terraformwebapp'
+        backendAzureRmKey: 'tf/terraform.tfstate'
 
-  stage: Release
+- stage: Release
   displayName:  Plan
-  jobs:
-  displayName: Plan
   
-  steps:
-  - task: TerraformTaskV2@2
-    displayName: plan
-    inputs:
-      provider: 'azurerm'
-      command: 'plan'
-      commandOptions: '-input=false -var "client_id=$(TF_VAR_client_id)" -var "client_secret=$(TF_VAR_client_secret)" -var "subscription_id=$(TF_VAR_subscription_id)" -var "tenant_id=$(TF_VAR_tenant_id)" -var "environment=production"'
-      environmentServiceNameAzureRM: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
+  jobs:
+  - job: Plan  
+    displayName: Plan
+  
+    steps:
+    - task: TerraformTaskV2@2
+      displayName: plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        commandOptions: '-input=false -var "client_id=$(TF_VAR_client_id)" -var "client_secret=$(TF_VAR_client_secret)" -var "subscription_id=$(TF_VAR_subscription_id)" -var "tenant_id=$(TF_VAR_tenant_id)" -var "environment=production"'
+        environmentServiceNameAzureRM: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
 
-  stage: Release
+- stage: Release
   displayName:  Apply
   jobs:
-  displayName: Apply
+  - job: Apply
+    displayName: Apply
   
-  steps:
-  - task: TerraformTaskV2@2
-    displayName: apply
-    inputs:
+    steps:
+    - task: TerraformTaskV2@2
+      displayName: apply
+      inputs:
       provider: 'azurerm'
       command: 'apply'
       commandOptions: '-input=false -var "client_id=$(TF_VAR_client_id)" -var "client_secret=$(TF_VAR_client_secret)" -var "subscription_id=$(TF_VAR_subscription_id)" -var "tenant_id=$(TF_VAR_tenant_id)" -var "environment=production"'
