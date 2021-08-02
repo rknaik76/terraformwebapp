@@ -24,6 +24,8 @@ stages:
       inputs:
         terraformVersion: '0.13.3'
 
+- stage: Init
+  displayName: Init
     - task: TerraformTaskV2@2
       displayName: init
       inputs:
