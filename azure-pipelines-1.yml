@@ -63,13 +63,13 @@ stages:
         - task: TerraformInstaller@0
           inputs:
             terraformVersion: '0.15.5'
-    - task: TerraformTaskV2@2
-      displayName: Init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        backendServiceArm: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
-        backendAzureRmResourceGroupName: 'terraform'
-        backendAzureRmStorageAccountName: 'terraformstorage1001'
-        backendAzureRmContainerName: 'terraformwebapp'
-        backendAzureRmKey: '$(WORKING_DIRECTORY)/drop/terraform.tfstate'
+        - task: TerraformTaskV2@2
+          displayName: Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
+            backendAzureRmResourceGroupName: 'terraform'
+            backendAzureRmStorageAccountName: 'terraformstorage1001'
+            backendAzureRmContainerName: 'terraformwebapp'
+            backendAzureRmKey: '$(WORKING_DIRECTORY)/drop/terraform.tfstate'
