@@ -60,7 +60,7 @@ stages:
             downloadType: 'specific'
             downloadPath: '$(WORKING_DIRECTORY)'
         - task: TerraformInstaller@0
-            inputs:
+          inputs:
             terraformVersion: '0.15.5'
     - task: TerraformTaskV2@2
       displayName: init
