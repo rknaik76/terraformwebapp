@@ -13,6 +13,7 @@ parameters:
     type: string
     default: plan
     values:
+      - init
       - apply
       - plan
       - destroy
@@ -63,7 +64,7 @@ stages:
           inputs:
             terraformVersion: '0.15.5'
     - task: TerraformTaskV2@2
-      displayName: init
+      displayName: Init
       inputs:
         provider: 'azurerm'
         command: 'init'
