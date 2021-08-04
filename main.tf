@@ -38,7 +38,7 @@ resource "azurerm_app_service_plan" "service-plan" {
     size = "B1"
   }
   tags = {
-    environment = var.environment
+    environment = "production"
   }
 }
 
