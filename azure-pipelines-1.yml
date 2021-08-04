@@ -67,6 +67,7 @@ stages:
           displayName: Init
           inputs:
             provider: 'azurerm'
+            workingDirectory: '$(Build.ArtifactStagingDirectory)'
             command: 'init'
             backendServiceArm: 'Azure Pass - Sponsorship(6b0b3e01-c26a-4b1e-8433-e649fc0a71ec)'
             backendAzureRmResourceGroupName: 'terraform'
