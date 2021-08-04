@@ -73,3 +73,16 @@ stages:
             backendAzureRmStorageAccountName: 'terraformstorage1001'
             backendAzureRmContainerName: 'terraformwebapp'
             backendAzureRmKey: '$(Build.ArtifactStagingDirectory)/drop/terraform.tfstate'
+
+
+- stage: Deploy
+  displayName: Plan
+  jobs:
+    - job: TerraformPlan
+      steps:
+        - download: none
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            commandOptions: '-input=false -var "client_id=$(TF_VAR_client_id)" -var "client_secret=$(TF_VAR_client_secret)" -var "subscription_id=$(TF_VAR_subscription_id)" -var "tenant_id=$(TF_VAR_tenant_id)" -var "environment=production"'
