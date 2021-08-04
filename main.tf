@@ -1,9 +1,9 @@
 provider "azurerm" {
   # version = ">2.4.0"
-  #subscription_id = var.subscription_id
-  #client_id       = var.client_id 
-  #client_secret   = var.client_secret  
-  #tenant_id       = var.tenant_id
+  subscription_id = var.subscription_id
+  client_id       = var.client_id 
+  client_secret   = var.client_secret  
+  tenant_id       = var.tenant_id
   features {}
 }
 
@@ -53,4 +53,28 @@ resource "azurerm_app_service" "app-service" {
   tags = {
     environment = var.environment
   }
+  auth_settings {
+    
+  }
+}
+
+resource "azurerm_storage_account" "storage_acc" {
+  name                     = "myteststorageacc9100"
+  resource_group_name      =  azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = {
+    environment = "development"
+  }
+}
+
+resource "azurerm_function_app" "function-app" {
+  name                       = "mytestfunctionapp9100"
+  location                   = azurerm_resource_group.rg.location
+  resource_group_name        = azurerm_resource_group.rg.name
+  app_service_plan_id        = azurerm_app_service_plan.service-plan.id
+  storage_account_name       = azurerm_storage_account.storage_acc.name
+  storage_account_access_key = azurerm_storage_account.storage_acc.primary_access_key
 }
