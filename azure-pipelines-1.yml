@@ -49,7 +49,7 @@ stages:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: drop
 
-- stage: Deploy
+- stage: Init
   displayName: Init
   jobs:
     - job: Terraformdeploy
@@ -75,7 +75,7 @@ stages:
             backendAzureRmKey: '$(Build.ArtifactStagingDirectory)/drop/terraform.tfstate'
 
 
-- stage: Deploy
+- stage: Plan
   displayName: Plan
   jobs:
     - job: TerraformPlan
