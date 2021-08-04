@@ -16,5 +16,5 @@ variable "tenant_id" {
 }
 */
 variable "environment" {
-
+    default = "production"
 }
