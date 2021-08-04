@@ -59,7 +59,7 @@ stages:
           inputs:
             buildType: 'current'
             downloadType: 'specific'
-            downloadPath: '$(WORKING_DIRECTORY)'
+            downloadPath: '$(Build.ArtifactStagingDirectory)'
         - task: TerraformInstaller@0
           inputs:
             terraformVersion: '0.15.5'
@@ -72,4 +72,4 @@ stages:
             backendAzureRmResourceGroupName: 'terraform'
             backendAzureRmStorageAccountName: 'terraformstorage1001'
             backendAzureRmContainerName: 'terraformwebapp'
-            backendAzureRmKey: '$(WORKING_DIRECTORY)/drop/terraform.tfstate'
+            backendAzureRmKey: '$(Build.ArtifactStagingDirectory)/drop/terraform.tfstate'
