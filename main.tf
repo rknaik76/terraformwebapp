@@ -51,7 +51,7 @@ resource "azurerm_app_service" "app-service" {
     linux_fx_version = "DOTNETCORE|3.1"
   }
   tags = {
-    environment = var.environment
+    environment = "production"
   }
   auth_settings {
     
